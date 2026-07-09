@@ -52,9 +52,9 @@ def main():
     df = pd.read_csv(DATA)
     corpus = df["Resume_str"].tolist()
 
-    # a fixed, reproducible test subject: the first IT resume in the dataset
-    it_rows = df[df["Category"] == "INFORMATION-TECHNOLOGY"]
-    resume_row = it_rows.iloc[0]
+    # a fixed, reproducible test subject: a skill-rich IT resume (dataset ID
+    # 83816738, matches 6 of 8 required skills for the software engineer job)
+    resume_row = df[df["ID"] == 83816738].iloc[0]
     resume_text = resume_row["Resume_str"]
 
     print("Building TF-IDF matcher over the 2,484-resume corpus...")

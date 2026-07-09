@@ -1,0 +1,158 @@
+{
+  "accountant": {
+    "title": "Staff Accountant",
+    "score": 4.0,
+    "coverage": 0.0,
+    "cosine": 0.0093,
+    "percentile": 0.1,
+    "matched_hard": [],
+    "missing_hard": [
+      "Accounting",
+      "Excel",
+      "Financial Reporting",
+      "GAAP"
+    ],
+    "matched_soft": [],
+    "missing_soft": [
+      "Auditing",
+      "Budgeting",
+      "CPA",
+      "Payroll",
+      "QuickBooks",
+      "SAP"
+    ],
+    "total_weight": 7.0,
+    "recommendations": [
+      {
+        "skill": "Accounting",
+        "kind": "required",
+        "gain": 8.6
+      },
+      {
+        "skill": "Excel",
+        "kind": "required",
+        "gain": 8.6
+      },
+      {
+        "skill": "Financial Reporting",
+        "kind": "required",
+        "gain": 8.6
+      },
+      {
+        "skill": "GAAP",
+        "kind": "required",
+        "gain": 8.6
+      },
+      {
+        "skill": "Auditing",
+        "kind": "preferred",
+        "gain": 4.3
+      }
+    ]
+  },
+  "data_analyst": {
+    "title": "Data Analyst",
+    "score": 49.0,
+    "coverage": 0.188,
+    "cosine": 0.0448,
+    "percentile": 0.944,
+    "matched_hard": [
+      "SQL"
+    ],
+    "missing_hard": [
+      "Data Analysis",
+      "Excel",
+      "Pandas",
+      "Python"
+    ],
+    "matched_soft": [
+      "Communication"
+    ],
+    "missing_soft": [
+      "ETL",
+      "Machine Learning",
+      "Power BI",
+      "Statistics",
+      "Tableau"
+    ],
+    "total_weight": 8.0,
+    "recommendations": [
+      {
+        "skill": "Data Analysis",
+        "kind": "required",
+        "gain": 7.5
+      },
+      {
+        "skill": "Excel",
+        "kind": "required",
+        "gain": 7.5
+      },
+      {
+        "skill": "Pandas",
+        "kind": "required",
+        "gain": 7.5
+      },
+      {
+        "skill": "Python",
+        "kind": "required",
+        "gain": 7.5
+      },
+      {
+        "skill": "ETL",
+        "kind": "preferred",
+        "gain": 3.8
+      }
+    ]
+  },
+  "software_engineer": {
+    "title": "Software Engineer - Backend",
+    "score": 82.8,
+    "coverage": 0.714,
+    "cosine": 0.1739,
+    "percentile": 1.0,
+    "matched_hard": [
+      "AWS",
+      "Agile",
+      "Git",
+      "Java",
+      "REST APIs",
+      "SQL"
+    ],
+    "missing_hard": [
+      "Docker",
+      "Python"
+    ],
+    "matched_soft": [
+      "CI/CD",
+      "Linux",
+      "React"
+    ],
+    "missing_soft": [
+      "Kubernetes",
+      "Machine Learning"
+    ],
+    "total_weight": 10.5,
+    "recommendations": [
+      {
+        "skill": "Docker",
+        "kind": "required",
+        "gain": 5.7
+      },
+      {
+        "skill": "Python",
+        "kind": "required",
+        "gain": 5.7
+      },
+      {
+        "skill": "Kubernetes",
+        "kind": "preferred",
+        "gain": 2.9
+      },
+      {
+        "skill": "Machine Learning",
+        "kind": "preferred",
+        "gain": 2.9
+      }
+    ]
+  }
+}

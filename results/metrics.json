@@ -1,0 +1,20 @@
+{
+  "dataset": {
+    "name": "Resume Dataset (Kaggle, snehaanbhawal/resume-dataset)",
+    "n_resumes": 2484,
+    "n_categories": 24,
+    "train_size": 1987,
+    "test_size": 497
+  },
+  "models": {
+    "Naive Bayes": {
+      "accuracy": 0.5734,
+      "macro_f1": 0.4936
+    },
+    "Logistic Regression": {
+      "accuracy": 0.6861,
+      "macro_f1": 0.6372
+    }
+  },
+  "best_model": "Logistic Regression"
+}
