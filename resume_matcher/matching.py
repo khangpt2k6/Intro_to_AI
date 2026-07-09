@@ -1,0 +1,68 @@
+"""Matching engine: TF-IDF vector space model + constraint-style skill coverage.
+
+The final compatibility score combines two signals:
+
+1. Skill coverage (weight 0.6): fraction of the job's constraints satisfied,
+   with hard (required) constraints weighted 1.0 and soft (preferred)
+   constraints weighted 0.5.
+2. Corpus percentile (weight 0.4): where this resume's TF-IDF cosine
+   similarity to the job description ranks against every resume in the
+   2,484-document corpus. Percentile calibration keeps the raw cosine
+   values (which are small in absolute terms) interpretable.
+"""
+
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+from .extraction import extract_skills, parse_job_description
+
+HARD_WEIGHT = 1.0
+SOFT_WEIGHT = 0.5
+COVERAGE_WEIGHT = 0.6
+SIMILARITY_WEIGHT = 0.4
+
+
+class ResumeMatcher:
+    def __init__(self, corpus_texts):
+        self.vectorizer = TfidfVectorizer(
+            stop_words="english", max_features=20000, ngram_range=(1, 2),
+            sublinear_tf=True,
+        )
+        self.corpus_matrix = self.vectorizer.fit_transform(corpus_texts)
+
+    def match(self, resume_text, job_text):
+        resume_vec = self.vectorizer.transform([resume_text])
+        job_vec = self.vectorizer.transform([job_text])
+
+        cosine = float(cosine_similarity(resume_vec, job_vec)[0, 0])
+        corpus_cosines = cosine_similarity(self.corpus_matrix, job_vec).ravel()
+        percentile = float((corpus_cosines < cosine).mean())
+
+        constraints = parse_job_description(job_text)
+        resume_skills = extract_skills(resume_text)
+
+        matched_hard = [s for s in constraints["hard"] if s in resume_skills]
+        missing_hard = [s for s in constraints["hard"] if s not in resume_skills]
+        matched_soft = [s for s in constraints["soft"] if s in resume_skills]
+        missing_soft = [s for s in constraints["soft"] if s not in resume_skills]
+
+        total_weight = (HARD_WEIGHT * len(constraints["hard"])
+                        + SOFT_WEIGHT * len(constraints["soft"]))
+        earned_weight = (HARD_WEIGHT * len(matched_hard)
+                         + SOFT_WEIGHT * len(matched_soft))
+        coverage = earned_weight / total_weight if total_weight else 0.0
+
+        score = 100.0 * (COVERAGE_WEIGHT * coverage + SIMILARITY_WEIGHT * percentile)
+
+        return {
+            "score": round(score, 1),
+            "coverage": round(coverage, 3),
+            "cosine": round(cosine, 4),
+            "percentile": round(percentile, 3),
+            "matched_hard": matched_hard,
+            "missing_hard": missing_hard,
+            "matched_soft": matched_soft,
+            "missing_soft": missing_soft,
+            "resume_skills": resume_skills,
+            "total_weight": total_weight,
+        }

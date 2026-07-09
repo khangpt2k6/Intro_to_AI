@@ -1,0 +1,19 @@
+Data Analyst
+BrightPath Analytics, Orlando, FL
+
+We are hiring a data analyst to turn raw business data into decisions. You
+will build dashboards, run analyses, and present findings to stakeholders.
+
+Required Qualifications:
+- Strong SQL skills for querying large datasets
+- Advanced Excel skills including pivot tables
+- Experience with Python for data analysis (pandas preferred)
+- Solid grounding in statistics and hypothesis testing
+- Experience building dashboards in Tableau
+
+Preferred Qualifications:
+- Exposure to machine learning
+- Experience with Power BI
+- Familiarity with R
+- Experience with ETL pipelines and data warehousing
+- Strong communication skills for presenting to non-technical audiences

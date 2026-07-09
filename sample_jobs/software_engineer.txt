@@ -1,0 +1,21 @@
+Software Engineer - Backend
+TechNova Solutions, Tampa, FL
+
+We are looking for a backend software engineer to design and ship services
+used by millions of customers. You will own features end to end, from design
+through deployment and monitoring.
+
+Required Qualifications:
+- 2+ years of professional experience with Python or Java
+- Strong SQL skills and experience with relational databases
+- Experience building and consuming REST APIs
+- Proficiency with Git and code review workflows
+- Experience with Docker and deploying services to AWS
+- Comfortable working in an Agile team
+
+Preferred Qualifications:
+- Experience with Kubernetes in production
+- Familiarity with React or another modern frontend framework
+- Experience setting up CI/CD pipelines
+- Exposure to machine learning systems
+- Linux administration experience

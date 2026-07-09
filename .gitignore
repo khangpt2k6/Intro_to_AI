@@ -1,0 +1,15 @@
+# dataset is downloaded locally (113MB), not committed - see README for setup
+data/
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# local process notes
+docs/superpowers/
+
+# OS noise
+Thumbs.db
+desktop.ini
