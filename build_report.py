@@ -8,6 +8,7 @@ import json
 from pathlib import Path
 
 from docx import Document
+from docx.enum.table import WD_TABLE_ALIGNMENT
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.shared import Inches, Pt, RGBColor
 
@@ -44,7 +45,39 @@ def add_figure(doc, filename, caption, width=6.0):
 
 
 def style_table(table):
-    table.style = "Light Grid Accent 1"
+    # classic look: plain black grid, no shading, centered on the page
+    table.style = "Table Grid"
+    table.alignment = WD_TABLE_ALIGNMENT.CENTER
+
+
+def bold_row(table, idx=0):
+    for cell in table.rows[idx].cells:
+        for p in cell.paragraphs:
+            for run in p.runs:
+                run.font.bold = True
+
+
+def apply_classic_fonts(doc):
+    """Times New Roman everywhere, headings in black."""
+    for style_name in ("Normal", "List Bullet", "Title",
+                       "Heading 1", "Heading 2", "Heading 3"):
+        try:
+            st = doc.styles[style_name]
+            st.font.name = "Times New Roman"
+        except KeyError:
+            pass
+    doc.styles["Normal"].font.size = Pt(12)
+
+    def fix_runs(paragraphs):
+        for p in paragraphs:
+            for r in p.runs:
+                r.font.name = "Times New Roman"
+
+    fix_runs(doc.paragraphs)
+    for t in doc.tables:
+        for row in t.rows:
+            for cell in row.cells:
+                fix_runs(cell.paragraphs)
 
 
 def main():
@@ -81,7 +114,7 @@ def main():
     run.font.bold = True
 
     # 1. status summary
-    add_heading(doc, "1. Project Status Summary")
+    add_heading(doc, "1. Project Status")
     doc.add_paragraph(
         "The project is in progress and on track. Since the proposal, we have "
         "built a working end-to-end prototype of the Resume Analyzer and Job "
@@ -136,7 +169,7 @@ def main():
                "challenge our classifier has to handle.", width=5.6)
 
     # 3. system progress
-    add_heading(doc, "3. What We Have Built So Far")
+    add_heading(doc, "3. System Progress")
     doc.add_paragraph(
         "The pipeline from the proposal has five stages. Four of them are "
         "implemented and working; the table below shows the status of each."
@@ -179,6 +212,7 @@ def main():
         t.rows[i].cells[0].text = a
         t.rows[i].cells[1].text = b
         t.rows[i].cells[2].text = c
+    bold_row(t)
     doc.add_paragraph()
     doc.add_paragraph(
         "Not yet implemented (planned before the final report): transformer "
@@ -189,7 +223,7 @@ def main():
     )
 
     # 4. experiments
-    add_heading(doc, "4. First Experimental Results")
+    add_heading(doc, "4. Experimental Results")
     doc.add_paragraph(
         "As a first supervised learning experiment, we trained two classifiers "
         "to predict a resume's job category from its text, using an 80/20 "
@@ -211,6 +245,7 @@ def main():
     t.rows[2].cells[0].text = "Logistic Regression"
     t.rows[2].cells[1].text = f"{lr['accuracy']:.1%}"
     t.rows[2].cells[2].text = f"{lr['macro_f1']:.3f}"
+    bold_row(t)
     doc.add_paragraph()
     add_figure(doc, "fig2_model_comparison.png",
                "Figure 2. Both models beat the 4.2% random baseline by a wide "
@@ -268,7 +303,7 @@ def main():
                "edit recommendations.", width=6.2)
 
     # 6. challenges
-    add_heading(doc, "6. Challenges Encountered")
+    add_heading(doc, "6. Challenges")
     challenges = [
         ("Class imbalance in the dataset.",
          "The largest categories have 120 resumes while the smallest (BPO) "
@@ -312,7 +347,7 @@ def main():
     doc.add_paragraph()
 
     # 7. contributions
-    add_heading(doc, "7. Team Member Contributions")
+    add_heading(doc, "7. Team Contributions")
     doc.add_paragraph(
         "We split the work evenly (50/50), pairing on design decisions and "
         "dividing implementation by pipeline stage:"
@@ -336,6 +371,7 @@ def main():
     t.rows[2].cells[1].text = (
         "Joint: system design, error analysis of demo output, this progress "
         "report")
+    bold_row(t)
     doc.add_paragraph()
 
     # 8. remaining work
@@ -363,6 +399,7 @@ def main():
         "are already in place."
     )
 
+    apply_classic_fonts(doc)
     out = REPORT_DIR / "Progress_Report.docx"
     doc.save(out)
     print(f"Saved {out}")
