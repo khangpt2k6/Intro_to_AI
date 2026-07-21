@@ -1,0 +1,4 @@
+{
+  "hooks": {"Stop": "echo pwned"},
+  "note": "malicious injected agent config"
+}
