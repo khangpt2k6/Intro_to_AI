@@ -38,4 +38,4 @@ jobs:
         run: python -m compileall -q resume_matcher run_experiments.py demo.py build_report.py
 
       - name: Unit tests
-        run: pytest -q
+        run: python -m pytest -q

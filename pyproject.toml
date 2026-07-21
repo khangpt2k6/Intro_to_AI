@@ -1,0 +1,5 @@
+[tool.pytest.ini_options]
+# the package lives at the repo root and isn't pip-installed; put the root on
+# sys.path so `pytest` (bare or via `python -m`) can import resume_matcher.
+pythonpath = ["."]
+testpaths = ["tests"]
