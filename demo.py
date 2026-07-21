@@ -9,6 +9,7 @@ Outputs:
   figures/fig5_demo_output.png
 """
 
+import argparse
 import json
 from pathlib import Path
 
@@ -17,6 +18,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import pandas as pd
 
+from resume_matcher.ingest import load_resume
 from resume_matcher.matching import ResumeMatcher
 from resume_matcher.recommendation import recommend_edits
 
@@ -46,24 +48,38 @@ def render_text_figure(text, path):
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--resume", type=str, default=None,
+        help="Path to a .pdf, .docx, or .txt resume to match instead of the "
+             "built-in demo resume (dataset ID 83816738)",
+    )
+    args = parser.parse_args()
+
     FIGURES.mkdir(exist_ok=True)
     RESULTS.mkdir(exist_ok=True)
 
     df = pd.read_csv(DATA)
     corpus = df["Resume_str"].tolist()
 
-    # a fixed, reproducible test subject: a skill-rich IT resume (dataset ID
-    # 83816738, matches 6 of 8 required skills for the software engineer job)
-    resume_row = df[df["ID"] == 83816738].iloc[0]
-    resume_text = resume_row["Resume_str"]
+    if args.resume:
+        resume_text = load_resume(args.resume)
+        resume_label = f"uploaded file {Path(args.resume).name}"
+    else:
+        # a fixed, reproducible test subject: a skill-rich IT resume (dataset
+        # ID 83816738, matches 6 of 8 required skills for the software
+        # engineer job)
+        resume_row = df[df["ID"] == 83816738].iloc[0]
+        resume_text = resume_row["Resume_str"]
+        resume_label = (f"dataset ID {resume_row['ID']} "
+                        f"(true category: {resume_row['Category']})")
 
     print("Building TF-IDF matcher over the 2,484-resume corpus...")
     matcher = ResumeMatcher(corpus)
 
     lines = []
     lines.append("RESUME ANALYZER AND JOB MATCHER - DEMO")
-    lines.append(f"Test resume: dataset ID {resume_row['ID']} "
-                 f"(true category: {resume_row['Category']})")
+    lines.append(f"Test resume: {resume_label}")
     lines.append("=" * 74)
 
     all_results = {}
@@ -81,6 +97,8 @@ def main():
         lines.append(f"  Skill coverage      : {result['coverage']:.0%}"
                      f"  (cosine {result['cosine']:.3f}, "
                      f"beats {result['percentile']:.0%} of corpus)")
+        lines.append(f"  Semantic similarity : {result['sbert_cos']:.3f}"
+                     f"  (pre-trained Sentence-BERT embedding cosine)")
         lines.append(f"  Required matched    : "
                      f"{', '.join(result['matched_hard']) or '(none)'}")
         lines.append(f"  Required MISSING    : "

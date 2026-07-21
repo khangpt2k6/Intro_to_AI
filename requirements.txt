@@ -4,3 +4,5 @@ matplotlib
 seaborn
 kagglehub
 python-docx
+sentence-transformers
+pypdf

@@ -1,10 +1,11 @@
 {
   "accountant": {
     "title": "Staff Accountant",
-    "score": 4.0,
+    "score": 13.5,
     "coverage": 0.0,
-    "cosine": 0.0093,
-    "percentile": 0.1,
+    "cosine": 0.0094,
+    "percentile": 0.101,
+    "sbert_cos": 0.3485,
     "matched_hard": [],
     "missing_hard": [
       "Accounting",
@@ -26,36 +27,37 @@
       {
         "skill": "Accounting",
         "kind": "required",
-        "gain": 8.6
+        "gain": 5.7
       },
       {
         "skill": "Excel",
         "kind": "required",
-        "gain": 8.6
+        "gain": 5.7
       },
       {
         "skill": "Financial Reporting",
         "kind": "required",
-        "gain": 8.6
+        "gain": 5.7
       },
       {
         "skill": "GAAP",
         "kind": "required",
-        "gain": 8.6
+        "gain": 5.7
       },
       {
         "skill": "Auditing",
         "kind": "preferred",
-        "gain": 4.3
+        "gain": 2.9
       }
     ]
   },
   "data_analyst": {
     "title": "Data Analyst",
-    "score": 49.0,
+    "score": 49.1,
     "coverage": 0.188,
     "cosine": 0.0448,
     "percentile": 0.944,
+    "sbert_cos": 0.4432,
     "matched_hard": [
       "SQL"
     ],
@@ -80,36 +82,37 @@
       {
         "skill": "Data Analysis",
         "kind": "required",
-        "gain": 7.5
+        "gain": 5.0
       },
       {
         "skill": "Excel",
         "kind": "required",
-        "gain": 7.5
+        "gain": 5.0
       },
       {
         "skill": "Pandas",
         "kind": "required",
-        "gain": 7.5
+        "gain": 5.0
       },
       {
         "skill": "Python",
         "kind": "required",
-        "gain": 7.5
+        "gain": 5.0
       },
       {
         "skill": "ETL",
         "kind": "preferred",
-        "gain": 3.8
+        "gain": 2.5
       }
     ]
   },
   "software_engineer": {
     "title": "Software Engineer - Backend",
-    "score": 82.8,
+    "score": 79.0,
     "coverage": 0.714,
     "cosine": 0.1739,
     "percentile": 1.0,
+    "sbert_cos": 0.6815,
     "matched_hard": [
       "AWS",
       "Agile",
@@ -136,22 +139,22 @@
       {
         "skill": "Docker",
         "kind": "required",
-        "gain": 5.7
+        "gain": 3.8
       },
       {
         "skill": "Python",
         "kind": "required",
-        "gain": 5.7
+        "gain": 3.8
       },
       {
         "skill": "Kubernetes",
         "kind": "preferred",
-        "gain": 2.9
+        "gain": 1.9
       },
       {
         "skill": "Machine Learning",
         "kind": "preferred",
-        "gain": 2.9
+        "gain": 1.9
       }
     ]
   }

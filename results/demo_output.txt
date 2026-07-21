@@ -3,39 +3,42 @@ Test resume: dataset ID 83816738 (true category: INFORMATION-TECHNOLOGY)
 ==========================================================================
 
 JOB: Staff Accountant
-  Compatibility score : 4.0/100
+  Compatibility score : 13.5/100
   Skill coverage      : 0%  (cosine 0.009, beats 10% of corpus)
+  Semantic similarity : 0.348  (pre-trained Sentence-BERT embedding cosine)
   Required matched    : (none)
   Required MISSING    : Accounting, Excel, Financial Reporting, GAAP
   Preferred matched   : (none)
   Top recommended edits (estimated score gain):
-    + Accounting           [required]  +8.6 pts
-    + Excel                [required]  +8.6 pts
-    + Financial Reporting  [required]  +8.6 pts
-    + GAAP                 [required]  +8.6 pts
-    + Auditing             [preferred]  +4.3 pts
+    + Accounting           [required]  +5.7 pts
+    + Excel                [required]  +5.7 pts
+    + Financial Reporting  [required]  +5.7 pts
+    + GAAP                 [required]  +5.7 pts
+    + Auditing             [preferred]  +2.9 pts
 
 JOB: Data Analyst
-  Compatibility score : 49.0/100
+  Compatibility score : 49.1/100
   Skill coverage      : 19%  (cosine 0.045, beats 94% of corpus)
+  Semantic similarity : 0.443  (pre-trained Sentence-BERT embedding cosine)
   Required matched    : SQL
   Required MISSING    : Data Analysis, Excel, Pandas, Python
   Preferred matched   : Communication
   Top recommended edits (estimated score gain):
-    + Data Analysis        [required]  +7.5 pts
-    + Excel                [required]  +7.5 pts
-    + Pandas               [required]  +7.5 pts
-    + Python               [required]  +7.5 pts
-    + ETL                  [preferred]  +3.8 pts
+    + Data Analysis        [required]  +5.0 pts
+    + Excel                [required]  +5.0 pts
+    + Pandas               [required]  +5.0 pts
+    + Python               [required]  +5.0 pts
+    + ETL                  [preferred]  +2.5 pts
 
 JOB: Software Engineer - Backend
-  Compatibility score : 82.8/100
+  Compatibility score : 79.0/100
   Skill coverage      : 71%  (cosine 0.174, beats 100% of corpus)
+  Semantic similarity : 0.681  (pre-trained Sentence-BERT embedding cosine)
   Required matched    : AWS, Agile, Git, Java, REST APIs, SQL
   Required MISSING    : Docker, Python
   Preferred matched   : CI/CD, Linux, React
   Top recommended edits (estimated score gain):
-    + Docker               [required]  +5.7 pts
-    + Python               [required]  +5.7 pts
-    + Kubernetes           [preferred]  +2.9 pts
-    + Machine Learning     [preferred]  +2.9 pts
+    + Docker               [required]  +3.8 pts
+    + Python               [required]  +3.8 pts
+    + Kubernetes           [preferred]  +1.9 pts
+    + Machine Learning     [preferred]  +1.9 pts
