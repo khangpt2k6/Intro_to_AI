@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: tests (py${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      # deliberately a lightweight dependency set: the 113MB Kaggle dataset and
+      # the torch/sentence-transformers stack are NOT available in CI, so the
+      # suite covers the pure-python pipeline (taxonomy, extraction, ingestion,
+      # recommendation) plus an import smoke test. semantic.py defers its torch
+      # import, so the whole package still imports here without it.
+      - name: Install test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy scikit-learn pandas pypdf python-docx pytest
+
+      - name: Syntax check (compileall)
+        run: python -m compileall -q resume_matcher run_experiments.py demo.py build_report.py
+
+      - name: Unit tests
+        run: pytest -q

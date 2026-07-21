@@ -1,0 +1,44 @@
+name: Guard
+
+# Blocks any pull request that tries to add AI-agent instruction/config files
+# (a prompt-injection vector) or the course-provided project brief PDF.
+# This check is intended to be a REQUIRED status check on main so such a PR
+# cannot be merged. See SECURITY.md.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  forbidden-files:
+    name: no injected agent files
+    runs-on: ubuntu-latest
+    steps:
+      - name: List files changed by this PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh pr diff "${{ github.event.pull_request.number }}" \
+            -R "${{ github.repository }}" --name-only > changed.txt
+          echo "Files changed in this PR:"
+          cat changed.txt
+
+      - name: Reject forbidden files
+        run: |
+          set -euo pipefail
+          # Case-insensitive. Anchored so it matches the file name in any dir.
+          pattern='(^|/)\.claude(/|$)|(^|/)claude\.md$|(^|/)agents\.md$|(^|/)gemini\.md$|(^|/)\.cursorrules$|(^|/)\.cursor/|(^|/)\.windsurfrules$|(^|/)\.aider|(^|/)\.mcp\.json$|(^|/)\.github/copilot-instructions\.md$|Group Project Description'
+          if grep -E -i "$pattern" changed.txt > offenders.txt; then
+            echo "::error::This PR adds or modifies forbidden files - AI-agent"
+            echo "::error::instruction/config files (prompt-injection risk) or the"
+            echo "::error::course project brief. Remove them before this PR can merge."
+            echo "Offending paths:"
+            cat offenders.txt
+            exit 1
+          fi
+          echo "OK: no forbidden files in this PR."

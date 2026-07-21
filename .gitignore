@@ -6,6 +6,7 @@ __pycache__/
 *.pyc
 .venv/
 venv/
+.pytest_cache/
 
 # local process notes
 docs/superpowers/
@@ -13,3 +14,21 @@ docs/superpowers/
 # OS noise
 Thumbs.db
 desktop.ini
+
+# course-provided project brief - do NOT commit (kept locally only)
+CAI4002 Group Project Description & Team.pdf
+*Group Project Description*
+
+# AI-agent instruction/config files - kept out of the repo so a PR cannot
+# smuggle in prompt-injection instructions (enforced in CI by guard.yml)
+.claude/
+CLAUDE.md
+**/CLAUDE.md
+AGENTS.md
+**/AGENTS.md
+GEMINI.md
+.cursorrules
+.cursor/
+.mcp.json
+.aider*
+.windsurfrules
