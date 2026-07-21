@@ -1,0 +1,49 @@
+name: Guard
+
+# Blocks any pull request that ADDS AI-agent instruction/config files
+# (a prompt-injection vector) or the course-provided project brief PDF.
+# Deletions are fine - a PR that removes such a file must pass.
+# This check is intended to be a REQUIRED status check on main so such a PR
+# cannot be merged. See SECURITY.md.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited, ready_for_review]
+
+permissions:
+  contents: read
+
+jobs:
+  forbidden-files:
+    name: no injected agent files
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reject forbidden files added by this PR
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "$BASE" "$HEAD" 2>/dev/null || true
+
+          # only files this PR adds/copies/modifies/renames - NOT deletions,
+          # so removing a forbidden file is allowed.
+          git diff --name-only --diff-filter=ACMRT "$BASE...$HEAD" > changed.txt
+          echo "Files added/modified by this PR:"
+          cat changed.txt
+
+          # case-insensitive, anchored to a file name in any directory
+          pattern='(^|/)\.claude(/|$)|(^|/)claude\.md$|(^|/)agents\.md$|(^|/)gemini\.md$|(^|/)\.cursorrules$|(^|/)\.cursor/|(^|/)\.windsurfrules$|(^|/)\.aider|(^|/)\.mcp\.json$|(^|/)\.github/copilot-instructions\.md$|Group Project Description'
+          if grep -E -i "$pattern" changed.txt > offenders.txt; then
+            echo "::error::This PR adds or modifies forbidden files - AI-agent"
+            echo "::error::instruction/config files (prompt-injection risk) or the"
+            echo "::error::course project brief. Remove them before this PR can merge."
+            echo "Offending paths:"
+            cat offenders.txt
+            exit 1
+          fi
+          echo "OK: no forbidden files added by this PR."
