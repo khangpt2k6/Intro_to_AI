@@ -35,7 +35,7 @@ jobs:
           pip install numpy scikit-learn pandas pypdf python-docx pytest
 
       - name: Syntax check (compileall)
-        run: python -m compileall -q resume_matcher run_experiments.py demo.py build_report.py
+        run: python -m compileall -q resume_matcher run_experiments.py demo.py build_report.py app.py
 
       - name: Unit tests
         run: python -m pytest -q

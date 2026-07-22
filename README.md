@@ -47,8 +47,17 @@ Dataset: [Resume Dataset (Kaggle)](https://www.kaggle.com/datasets/snehaanbhawal
 python run_experiments.py                 # classifier metrics + report figures
 python demo.py                            # match one IT resume against three job postings
 python demo.py --resume path/to/cv.pdf    # match an uploaded pdf/docx/txt resume
+streamlit run app.py                      # interactive web UI
 pytest -q                                 # unit tests
 ```
+
+## Web UI
+
+`streamlit run app.py` opens a browser app: upload (or paste) a resume, pick or
+paste a job description, and see the compatibility score with its component
+breakdown, matched vs missing skills, the Naive Bayes predicted job category,
+and the top recommended edits. The corpus, matcher, and models load once and are
+cached (`@st.cache_resource`).
 
 ## Skill confidence
 
