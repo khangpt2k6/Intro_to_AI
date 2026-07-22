@@ -1,25 +1,38 @@
-"""Skill extraction behavior: counts, confidence, and word-boundary matching."""
+"""Skill extraction behavior: counts, confidence blend, word-boundary matching."""
 
 from resume_matcher.extraction import extract_skills, parse_job_description
 
 
-def test_extract_counts_and_confidence():
+def test_counts_are_exact():
     profile = extract_skills("I love Python. Python is great, python python.")
-    assert "Python" in profile
     assert profile["Python"]["count"] == 4
-    # confidence = min(0.95, 0.60 + 0.10 * count)
-    assert profile["Python"]["confidence"] == 0.95
+
+
+def test_confidence_in_unit_range_and_rises_with_context():
+    listed = extract_skills("Skills: Python")
+    demonstrated = extract_skills(
+        "Built and deployed Python services; developed Python tooling.")
+    assert 0.0 < listed["Python"]["confidence"] <= 0.99
+    # experience/action context beats a bare skills-list mention
+    assert demonstrated["Python"]["confidence"] > listed["Python"]["confidence"]
+    # without a classifier the NB agreement signal is not computed
+    assert listed["Python"]["agreement"] is None
+
+
+def test_confidence_rises_with_frequency():
+    one = extract_skills("Python")["Python"]["confidence"]
+    many = extract_skills("Python python Python python python")["Python"]["confidence"]
+    assert many >= one
 
 
 def test_word_boundaries_do_not_over_match():
-    # "javascript" must resolve to JavaScript, never the substring "java"
     profile = extract_skills("Experienced in JavaScript development.")
     assert "JavaScript" in profile
     assert "Java" not in profile
 
 
 def test_absent_skill_not_reported():
-    assert extract_skills("just some plain english prose") == {}
+    assert extract_skills("just some plain everyday writing here") == {}
 
 
 def test_parse_job_splits_hard_and_soft():
@@ -32,5 +45,4 @@ def test_parse_job_splits_hard_and_soft():
     assert "Python" in constraints["hard"]
     assert "SQL" in constraints["hard"]
     assert "Docker" in constraints["soft"]
-    # a skill is never both a hard and a soft constraint
     assert not set(constraints["hard"]) & set(constraints["soft"])

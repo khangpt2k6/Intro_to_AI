@@ -18,6 +18,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import pandas as pd
 
+from resume_matcher.confidence import ConfidenceModel
+from resume_matcher.extraction import extract_skills
 from resume_matcher.ingest import load_resume
 from resume_matcher.matching import ResumeMatcher
 from resume_matcher.recommendation import recommend_edits
@@ -74,13 +76,27 @@ def main():
         resume_label = (f"dataset ID {resume_row['ID']} "
                         f"(true category: {resume_row['Category']})")
 
-    print("Building TF-IDF matcher over the 2,484-resume corpus...")
-    matcher = ResumeMatcher(corpus)
+    print("Training NB confidence model + building TF-IDF matcher over the "
+          "2,484-resume corpus...")
+    classifier = ConfidenceModel(corpus, df["Category"])
+    matcher = ResumeMatcher(corpus, classifier=classifier)
 
     lines = []
     lines.append("RESUME ANALYZER AND JOB MATCHER - DEMO")
     lines.append(f"Test resume: {resume_label}")
     lines.append("=" * 74)
+
+    # resume skill profile: confidence blends mention frequency, experience
+    # context, and Naive Bayes category agreement (see resume_matcher/confidence.py)
+    resume_profile = extract_skills(resume_text, classifier)
+    top_skills = sorted(resume_profile.items(),
+                        key=lambda kv: kv[1]["confidence"], reverse=True)[:12]
+    lines.append("")
+    lines.append("Top extracted skills  (confidence = freq + context + NB agreement)")
+    for skill, info in top_skills:
+        lines.append(f"  {skill:<20} conf {info['confidence']:.2f}"
+                     f"   x{info['count']}, context {info['context']:.2f}, "
+                     f"agreement {info['agreement']:.2f}")
 
     all_results = {}
     for job_file in sorted(JOBS.glob("*.txt")):
@@ -99,12 +115,15 @@ def main():
                      f"beats {result['percentile']:.0%} of corpus)")
         lines.append(f"  Semantic similarity : {result['sbert_cos']:.3f}"
                      f"  (pre-trained Sentence-BERT embedding cosine)")
-        lines.append(f"  Required matched    : "
-                     f"{', '.join(result['matched_hard']) or '(none)'}")
+        conf = result["confidence"]
+        matched_hard_str = ", ".join(f"{s} ({conf[s]:.2f})"
+                                     for s in result["matched_hard"]) or "(none)"
+        matched_soft_str = ", ".join(f"{s} ({conf[s]:.2f})"
+                                     for s in result["matched_soft"]) or "(none)"
+        lines.append(f"  Required matched    : {matched_hard_str}")
         lines.append(f"  Required MISSING    : "
                      f"{', '.join(result['missing_hard']) or '(none)'}")
-        lines.append(f"  Preferred matched   : "
-                     f"{', '.join(result['matched_soft']) or '(none)'}")
+        lines.append(f"  Preferred matched   : {matched_soft_str}")
         if recs:
             lines.append("  Top recommended edits (estimated score gain):")
             for r in recs:

@@ -30,7 +30,10 @@ SBERT_WEIGHT = 0.3
 
 
 class ResumeMatcher:
-    def __init__(self, corpus_texts):
+    def __init__(self, corpus_texts, classifier=None):
+        # optional confidence.ConfidenceModel; when present, extracted skills
+        # carry an NB category-agreement signal and coverage is confidence-weighted
+        self.classifier = classifier
         self.vectorizer = TfidfVectorizer(
             stop_words="english", max_features=20000, ngram_range=(1, 2),
             sublinear_tf=True,
@@ -48,17 +51,23 @@ class ResumeMatcher:
         sbert_cos = semantic_similarity(resume_text, job_text)
 
         constraints = parse_job_description(job_text)
-        resume_skills = extract_skills(resume_text)
+        resume_skills = extract_skills(resume_text, self.classifier)
+
+        def _conf(skill):
+            return resume_skills[skill]["confidence"]
 
         matched_hard = [s for s in constraints["hard"] if s in resume_skills]
         missing_hard = [s for s in constraints["hard"] if s not in resume_skills]
         matched_soft = [s for s in constraints["soft"] if s in resume_skills]
         missing_soft = [s for s in constraints["soft"] if s not in resume_skills]
 
+        # each matched constraint is credited by the resume's confidence in that
+        # skill, so a genuinely-demonstrated skill counts more than a name-dropped
+        # one. The denominator stays count-based so coverage stays in [0, 1].
         total_weight = (HARD_WEIGHT * len(constraints["hard"])
                         + SOFT_WEIGHT * len(constraints["soft"]))
-        earned_weight = (HARD_WEIGHT * len(matched_hard)
-                         + SOFT_WEIGHT * len(matched_soft))
+        earned_weight = (HARD_WEIGHT * sum(_conf(s) for s in matched_hard)
+                         + SOFT_WEIGHT * sum(_conf(s) for s in matched_soft))
         coverage = earned_weight / total_weight if total_weight else 0.0
 
         score = 100.0 * (COVERAGE_WEIGHT * coverage
@@ -75,6 +84,7 @@ class ResumeMatcher:
             "missing_hard": missing_hard,
             "matched_soft": matched_soft,
             "missing_soft": missing_soft,
+            "confidence": {s: _conf(s) for s in matched_hard + matched_soft},
             "resume_skills": resume_skills,
             "total_weight": total_weight,
         }
