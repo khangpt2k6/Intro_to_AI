@@ -6,3 +6,4 @@ kagglehub
 python-docx
 sentence-transformers
 pypdf
+streamlit

@@ -55,6 +55,16 @@ class ConfidenceModel:
         """Return P(category | text) as a vector aligned with self.classes_."""
         return self.pipeline.predict_proba([text])[0]
 
+    def predict_category(self, text):
+        """Most likely job category for the text."""
+        return str(self.pipeline.predict([text])[0])
+
+    def top_categories(self, text, k=3):
+        """Top-k (category, probability) pairs, highest first."""
+        probs = self.category_probs(text)
+        order = np.argsort(probs)[::-1][:k]
+        return [(str(self.classes_[i]), float(probs[i])) for i in order]
+
     def agreement(self, text_probs, skill):
         """Cosine between the resume's category distribution and the skill's.
 
