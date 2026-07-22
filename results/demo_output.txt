@@ -2,6 +2,20 @@ RESUME ANALYZER AND JOB MATCHER - DEMO
 Test resume: dataset ID 83816738 (true category: INFORMATION-TECHNOLOGY)
 ==========================================================================
 
+Top extracted skills  (confidence = freq + context + NB agreement)
+  SQL                  conf 0.91   x10, context 0.65, agreement 0.99
+  PHP                  conf 0.88   x4, context 1.00, agreement 0.65
+  Databases            conf 0.87   x6, context 0.65, agreement 0.88
+  Spring               conf 0.86   x3, context 1.00, agreement 0.60
+  Bootstrap            conf 0.82   x3, context 0.77, agreement 0.64
+  Linux                conf 0.82   x2, context 0.65, agreement 0.97
+  Java                 conf 0.81   x15, context 0.91, agreement 0.52
+  HTML/CSS             conf 0.80   x7, context 0.80, agreement 0.57
+  Git                  conf 0.80   x9, context 0.61, agreement 0.69
+  Project Management   conf 0.78   x2, context 1.00, agreement 0.60
+  CI/CD                conf 0.76   x4, context 0.82, agreement 0.45
+  Microservices        conf 0.75   x3, context 0.77, agreement 0.46
+
 JOB: Staff Accountant
   Compatibility score : 13.5/100
   Skill coverage      : 0%  (cosine 0.009, beats 10% of corpus)
@@ -17,12 +31,12 @@ JOB: Staff Accountant
     + Auditing             [preferred]  +2.9 pts
 
 JOB: Data Analyst
-  Compatibility score : 49.1/100
-  Skill coverage      : 19%  (cosine 0.045, beats 94% of corpus)
+  Compatibility score : 47.4/100
+  Skill coverage      : 14%  (cosine 0.045, beats 94% of corpus)
   Semantic similarity : 0.443  (pre-trained Sentence-BERT embedding cosine)
-  Required matched    : SQL
+  Required matched    : SQL (0.91)
   Required MISSING    : Data Analysis, Excel, Pandas, Python
-  Preferred matched   : Communication
+  Preferred matched   : Communication (0.50)
   Top recommended edits (estimated score gain):
     + Data Analysis        [required]  +5.0 pts
     + Excel                [required]  +5.0 pts
@@ -31,12 +45,12 @@ JOB: Data Analyst
     + ETL                  [preferred]  +2.5 pts
 
 JOB: Software Engineer - Backend
-  Compatibility score : 79.0/100
-  Skill coverage      : 71%  (cosine 0.174, beats 100% of corpus)
+  Compatibility score : 71.6/100
+  Skill coverage      : 53%  (cosine 0.174, beats 100% of corpus)
   Semantic similarity : 0.681  (pre-trained Sentence-BERT embedding cosine)
-  Required matched    : AWS, Agile, Git, Java, REST APIs, SQL
+  Required matched    : AWS (0.55), Agile (0.73), Git (0.80), Java (0.81), REST APIs (0.65), SQL (0.91)
   Required MISSING    : Docker, Python
-  Preferred matched   : CI/CD, Linux, React
+  Preferred matched   : CI/CD (0.76), Linux (0.82), React (0.63)
   Top recommended edits (estimated score gain):
     + Docker               [required]  +3.8 pts
     + Python               [required]  +3.8 pts

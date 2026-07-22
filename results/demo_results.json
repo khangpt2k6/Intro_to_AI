@@ -3,8 +3,8 @@
     "title": "Staff Accountant",
     "score": 13.5,
     "coverage": 0.0,
-    "cosine": 0.0094,
-    "percentile": 0.101,
+    "cosine": 0.0093,
+    "percentile": 0.1,
     "sbert_cos": 0.3485,
     "matched_hard": [],
     "missing_hard": [
@@ -22,6 +22,7 @@
       "QuickBooks",
       "SAP"
     ],
+    "confidence": {},
     "total_weight": 7.0,
     "recommendations": [
       {
@@ -53,8 +54,8 @@
   },
   "data_analyst": {
     "title": "Data Analyst",
-    "score": 49.1,
-    "coverage": 0.188,
+    "score": 47.4,
+    "coverage": 0.145,
     "cosine": 0.0448,
     "percentile": 0.944,
     "sbert_cos": 0.4432,
@@ -77,6 +78,10 @@
       "Statistics",
       "Tableau"
     ],
+    "confidence": {
+      "SQL": 0.91,
+      "Communication": 0.5
+    },
     "total_weight": 8.0,
     "recommendations": [
       {
@@ -108,8 +113,8 @@
   },
   "software_engineer": {
     "title": "Software Engineer - Backend",
-    "score": 79.0,
-    "coverage": 0.714,
+    "score": 71.6,
+    "coverage": 0.529,
     "cosine": 0.1739,
     "percentile": 1.0,
     "sbert_cos": 0.6815,
@@ -134,6 +139,17 @@
       "Kubernetes",
       "Machine Learning"
     ],
+    "confidence": {
+      "AWS": 0.55,
+      "Agile": 0.73,
+      "Git": 0.8,
+      "Java": 0.81,
+      "REST APIs": 0.65,
+      "SQL": 0.91,
+      "CI/CD": 0.76,
+      "Linux": 0.82,
+      "React": 0.63
+    },
     "total_weight": 10.5,
     "recommendations": [
       {
