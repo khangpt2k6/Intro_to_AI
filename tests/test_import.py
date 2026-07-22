@@ -15,6 +15,7 @@ def test_package_imports_without_torch():
     import resume_matcher.matching  # noqa: F401
     import resume_matcher.recommendation  # noqa: F401
     import resume_matcher.semantic  # noqa: F401
+    import resume_matcher.confidence  # noqa: F401
 
     # importing the package must not have eagerly pulled in the torch stack
     assert "sentence_transformers" not in sys.modules
